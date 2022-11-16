@@ -1,23 +1,25 @@
 const mariadb = require("mariadb");
 
-async function DbConnection(user, password, host, port, database) {
-    let conn;
+class DbConnection {
+    async execute(db_connection, sql) {
+        let conn;
 
-    try {
-        conn = await mariadb.createConnection({
-            user: user,
-            password: password,
-            host: host,
-            port: port,
-            database: database,
-        });
-    } catch (err) {
-        console.log(err);
-    } finally {
-        if (conn) conn.close();
+        try {
+            conn = await mariadb.createConnection({
+                user: db_connection[0],
+                password: db_connection[1],
+                host: db_connection[2],
+                port: db_connection[3],
+                database: db_connection[4],
+            });
+
+            return conn.query(sql);
+        } catch (err) {
+            console.log(err);
+        } finally {
+            if (conn) conn.close();
+        }
     }
 }
 
-async function execute_list() {
-    
-}
+module.exports = DbConnection;
